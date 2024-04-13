@@ -1,11 +1,11 @@
 {
   "profiles": {
-    "MyCompanyName.MyProjectName.Development": {
+    "MyCompanyName.MyProjectName.Localhost": {
       "commandName": "Project",
       "launchBrowser": true,
       "applicationUrl": "http://localhost:8900",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Localhost"
       }
     }
   }

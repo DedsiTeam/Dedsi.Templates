@@ -48,7 +48,8 @@ namespace MyCompanyName.MyProjectName;
     typeof(AbpSettingManagementEntityFrameworkCoreModule),
     typeof(AbpTenantManagementEntityFrameworkCoreModule),
     typeof(AbpAspNetCoreSerilogModule),
-    typeof(AbpSwashbuckleModule)
+    typeof(AbpSwashbuckleModule),
+    typeof(AbpAutofacModule)
     )]
 public class MyProjectNameHttpApiHostModule : AbpModule
 {
@@ -59,6 +60,7 @@ public class MyProjectNameHttpApiHostModule : AbpModule
         var hostingEnvironment = context.Services.GetHostingEnvironment();
         var configuration = context.Services.GetConfiguration();
 
+        // SqlServer
         Configure<AbpDbContextOptions>(options =>
         {
             options.UseSqlServer();

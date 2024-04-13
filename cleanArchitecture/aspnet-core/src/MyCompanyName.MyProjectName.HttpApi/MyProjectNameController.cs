@@ -6,7 +6,7 @@ using Volo.Abp.AspNetCore.Mvc;
 
 namespace MyCompanyName.MyProjectName.HttpApi;
 
-[Authorize]
+// [Authorize]
 [Area(MyCompanyNameMyProjectNameCoreOptions.ModuleName)]
 [RemoteService(Name = MyCompanyNameMyProjectNameCoreOptions.RemoteServiceName)]
 [Route("api/MyProjectName/[controller]/[action]")]

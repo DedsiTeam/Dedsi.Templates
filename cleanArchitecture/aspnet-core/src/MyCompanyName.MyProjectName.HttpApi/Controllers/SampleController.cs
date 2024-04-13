@@ -10,6 +10,6 @@ public class SampleController(ISampleAppService sampleAppService,ISampleReadAppS
     /// 获得
     /// </summary>
     /// <returns></returns>
-    [HttpGet]
-    public Task<SampleDto> GetAsync() => sampleReadAppService.GetAsync();
+    [HttpGet("{id}")]
+    public Task<SampleDto> GetAsync(Guid id) => sampleReadAppService.GetAsync(id);
 }
