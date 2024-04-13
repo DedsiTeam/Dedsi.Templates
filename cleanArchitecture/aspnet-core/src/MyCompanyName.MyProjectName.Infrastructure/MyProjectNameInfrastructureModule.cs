@@ -1,10 +1,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using MyCompanyName.MyProjectName.Core;
-using MyCompanyName.MyProjectName.Infrastructure.EntityFrameworkCore;
+using MyCompanyName.MyProjectName.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.Modularity;
 
-namespace MyCompanyName.MyProjectName.Infrastructure;
+namespace MyCompanyName.MyProjectName;
 
 [DependsOn(
     typeof(MyProjectNameCoreModule),

@@ -13,7 +13,6 @@ using StackExchange.Redis;
 using Microsoft.OpenApi.Models;
 using MyCompanyName.MyProjectName.Core;
 using MyCompanyName.MyProjectName.HttpApi;
-using MyCompanyName.MyProjectName.Infrastructure;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc.UI.MultiTenancy;
 using Volo.Abp.AspNetCore.Serilog;
@@ -109,7 +108,7 @@ public class MyProjectNameHttpApiHostModule : AbpModule
                 var directoryInfo = new DirectoryInfo(AppContext.BaseDirectory);
                 var fileInfos = directoryInfo.GetFileSystemInfos()
                     .Where(a => a.Extension == ".xml")
-                    .Where(a => a.Name.EndsWith(".Application.Contracts.xml") || a.Name.EndsWith("HttpApi.xml"));
+                    .Where(a => a.Name.EndsWith("MyProjectName.Core.xml") || a.Name.EndsWith("HttpApi.xml"));
         
                 foreach (var info in fileInfos)
                 {

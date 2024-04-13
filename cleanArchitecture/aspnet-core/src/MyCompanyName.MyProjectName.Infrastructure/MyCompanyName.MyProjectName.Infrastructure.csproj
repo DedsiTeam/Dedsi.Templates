@@ -4,6 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>MyCompanyName.MyProjectName</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -12,10 +13,6 @@
 
     <ItemGroup>
       <PackageReference Include="Volo.Abp.EntityFrameworkCore" Version="8.1.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="EntityFrameworkCore\Repositories\" />
     </ItemGroup>
 
 </Project>

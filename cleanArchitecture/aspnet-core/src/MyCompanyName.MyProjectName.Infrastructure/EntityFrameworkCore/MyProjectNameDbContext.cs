@@ -3,7 +3,7 @@ using MyCompanyName.MyProjectName.Core;
 using Volo.Abp.Data;
 using Volo.Abp.EntityFrameworkCore;
 
-namespace MyCompanyName.MyProjectName.Infrastructure.EntityFrameworkCore;
+namespace MyCompanyName.MyProjectName.EntityFrameworkCore;
 
 [ConnectionStringName(MyCompanyNameMyProjectNameCoreOptions.ConnectionStringName)]
 public class MyProjectNameDbContext : AbpDbContext<MyProjectNameDbContext>
