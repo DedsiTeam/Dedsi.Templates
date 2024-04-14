@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using StackExchange.Redis;
 using Microsoft.OpenApi.Models;
 using MyCompanyName.MyProjectName.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.SwaggerUI;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc.UI.MultiTenancy;
 using Volo.Abp.AspNetCore.Serilog;
@@ -28,7 +29,6 @@ using Volo.Abp.Modularity;
 using Volo.Abp.MultiTenancy;
 using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
-using Volo.Abp.Swashbuckle;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Volo.Abp.VirtualFileSystem;
 
@@ -48,8 +48,8 @@ namespace MyCompanyName.MyProjectName;
     typeof(AbpSettingManagementEntityFrameworkCoreModule),
     typeof(AbpTenantManagementEntityFrameworkCoreModule),
     typeof(AbpAspNetCoreSerilogModule),
-    typeof(AbpSwashbuckleModule)
-    )]
+    typeof(AbpAutofacModule)
+)]
 public class MyProjectNameHttpApiHostModule : AbpModule
 {
     private const bool MultiTenancyConstsIsEnabled = false;
@@ -59,6 +59,7 @@ public class MyProjectNameHttpApiHostModule : AbpModule
         var hostingEnvironment = context.Services.GetHostingEnvironment();
         var configuration = context.Services.GetConfiguration();
 
+        // SqlServer
         Configure<AbpDbContextOptions>(options =>
         {
             options.UseSqlServer();
@@ -93,30 +94,23 @@ public class MyProjectNameHttpApiHostModule : AbpModule
             });
         }
 
-        context.Services.AddAbpSwaggerGenWithOAuth(
-            configuration["AuthServer:Authority"]!,
-            new Dictionary<string, string>
-            {
-                { MyProjectNameRemoteServiceConsts.ModuleName,  MyProjectNameRemoteServiceConsts.ModuleName + " API"}
-            },
-            options =>
-            {
+        context.Services.AddSwaggerGen(options =>
+        {
+            options.SwaggerDoc(MyProjectNameRemoteServiceConsts.ModuleName, new OpenApiInfo {Title = MyProjectNameRemoteServiceConsts.ModuleName + " API", Version = "v1"});
+            options.DocInclusionPredicate((docName, description) => true);
+            options.CustomSchemaIds(type => type.FullName);
                 
-                options.SwaggerDoc(MyProjectNameRemoteServiceConsts.ModuleName, new OpenApiInfo {Title = MyProjectNameRemoteServiceConsts.ModuleName + " API", Version = "v1"});
-                options.DocInclusionPredicate((docName, description) => true);
-                options.CustomSchemaIds(type => type.FullName);
-                
-                var directoryInfo = new DirectoryInfo(AppContext.BaseDirectory);
-                var fileInfos = directoryInfo.GetFileSystemInfos()
-                    .Where(a => a.Extension == ".xml")
-                    .Where(a => a.Name.EndsWith(".Application.Contracts.xml") || a.Name.EndsWith("HttpApi.xml"));
+            var directoryInfo = new DirectoryInfo(AppContext.BaseDirectory);
+            var fileInfos = directoryInfo.GetFileSystemInfos()
+                .Where(a => a.Extension == ".xml")
+                .Where(a => a.Name.EndsWith("MyProjectName.Core.xml") || a.Name.EndsWith("HttpApi.xml"));
         
-                foreach (var info in fileInfos)
-                {
-                    var xmlPath = Path.Combine(AppContext.BaseDirectory, info.Name);
-                    options.IncludeXmlComments(xmlPath,true);
-                }
-            });
+            foreach (var info in fileInfos)
+            {
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, info.Name);
+                options.IncludeXmlComments(xmlPath,true);
+            }
+        });
 
         Configure<AbpLocalizationOptions>(options =>
         {
@@ -191,14 +185,14 @@ public class MyProjectNameHttpApiHostModule : AbpModule
         }
         app.UseAbpRequestLocalization();
         app.UseAuthorization();
+
         app.UseSwagger();
-        app.UseAbpSwaggerUI(options =>
+        app.UseSwaggerUI(options =>
         {
             options.SwaggerEndpoint($"/swagger/{MyProjectNameRemoteServiceConsts.ModuleName}/swagger.json", MyProjectNameRemoteServiceConsts.ModuleName +" API");
-
-            var configuration = context.GetConfiguration();
-            options.OAuthClientId(configuration["AuthServer:SwaggerClientId"]);
-            options.OAuthScopes(MyProjectNameRemoteServiceConsts.ModuleName);
+            
+            options.DocExpansion(DocExpansion.None);
+            options.DefaultModelsExpandDepth(-1);
         });
         
         app.UseAuditing();
