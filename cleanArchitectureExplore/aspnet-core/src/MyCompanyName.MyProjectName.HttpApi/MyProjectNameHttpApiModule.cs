@@ -1,13 +1,12 @@
 using Microsoft.Extensions.DependencyInjection;
-using MyCompanyName.MyProjectName.Core;
-using Volo.Abp.AspNetCore.Mvc;
+using MyCompanyName.MyProjectName.AspNetCore;
 using Volo.Abp.Modularity;
 
-namespace MyCompanyName.MyProjectName.HttpApi;
+namespace MyCompanyName.MyProjectName;
 
 [DependsOn(
-    typeof(MyProjectNameCoreModule),
-    typeof(AbpAspNetCoreMvcModule)
+    typeof(MyProjectNameDomainModule),
+    typeof(MyProjectNameAspNetCoreModule)
 )]
 public class MyProjectNameHttpApiModule : AbpModule
 {

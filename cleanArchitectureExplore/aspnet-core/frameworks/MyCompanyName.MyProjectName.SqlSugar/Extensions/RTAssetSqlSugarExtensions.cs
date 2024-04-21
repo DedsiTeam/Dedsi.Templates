@@ -24,9 +24,7 @@ public static class RTAssetSqlSugarExtensions
         context.ConfigureSqlSugar(connectionConfig);
     }
 
-    public static void ConfigureSqlSugar(this ServiceConfigurationContext context, 
-        ConnectionConfig connectionConfig,
-        string environmentName = "Localhost")
+    public static void ConfigureSqlSugar(this ServiceConfigurationContext context, ConnectionConfig connectionConfig, string environmentName = "Localhost")
     {
         var environment = context.Services.GetHostingEnvironment();
 

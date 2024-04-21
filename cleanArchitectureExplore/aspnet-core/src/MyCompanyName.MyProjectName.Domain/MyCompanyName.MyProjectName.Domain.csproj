@@ -8,8 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\frameworks\MyCompanyName.MyProjectName.AspNetCore\MyCompanyName.MyProjectName.AspNetCore.csproj" />
-      <ProjectReference Include="..\MyCompanyName.MyProjectName.Domain\MyCompanyName.MyProjectName.Domain.csproj" />
+      <ProjectReference Include="..\..\frameworks\MyCompanyName.MyProjectName.Core\MyCompanyName.MyProjectName.Core.csproj" />
     </ItemGroup>
 
 </Project>

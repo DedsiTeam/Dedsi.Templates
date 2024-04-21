@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -12,7 +11,6 @@ using Microsoft.Extensions.Hosting;
 using StackExchange.Redis;
 using Microsoft.OpenApi.Models;
 using MyCompanyName.MyProjectName.Core;
-using MyCompanyName.MyProjectName.HttpApi;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc.UI.MultiTenancy;

@@ -1,94 +1,56 @@
 using System.Linq.Expressions;
+using MyCompanyName.MyProjectName.Core.Repositories;
 using SqlSugar;
 
 namespace MyCompanyName.MyProjectName.Repositories;
 
-public class SqlSugarRepository<TEntity>(ISqlSugarClient dbClient)
-    : ReadOnlyRepository<TEntity>(dbClient),  ISqlSugarRepository<TEntity> where TEntity : class, new()
+public class SqlSugarRepository<TEntity>(ISqlSugarClient sqlSugarClient) 
+    : ReadOnlyRepository<TEntity>(sqlSugarClient), 
+        IRepository<TEntity>  
+    where TEntity : class, new()
 {
-    public async Task<bool> InsertAsync(List<TEntity> entities)
+    public Task<int> InsertAsync(TEntity entity)
     {
-        var resultCount = 0;
-        if (entities.Count > 10000)
-        {
-            resultCount = await dbClient.Fastest<TEntity>().BulkCopyAsync(entities);
-        }
-        else
-        {
-            resultCount = await dbClient.Insertable(entities).ExecuteCommandAsync();
-        }
-
-        return resultCount == entities.Count;
-    }
-    
-    public async Task<bool> InsertAsync(TEntity entity)
-    {
-        var resultCount = await dbClient.Insertable(entity).ExecuteCommandAsync();
-        return resultCount == 1;
+        return sqlSugarClient.Insertable(entity).ExecuteCommandAsync();
     }
 
-    
-    public async Task<bool> UpdateAsync(TEntity entity)
+    public Task<int> InsertAsync(FormattableString sql)
     {
-        var resultCount = await dbClient.Updateable(entity).ExecuteCommandAsync();
-        return resultCount == 1;
-    }
-    
-    public async Task<bool> UpdateColumnsAsync(TEntity entity,Expression<Func<TEntity, object>> columns)
-    {
-        var resultCount = await dbClient.Updateable(entity).UpdateColumns(columns).ExecuteCommandAsync();
-        return resultCount == 1;
-    }
-    
-    public async Task<bool> IgnoreColumnsAsync(TEntity entity,Expression<Func<TEntity, object>> columns)
-    {
-        var resultCount = await dbClient.Updateable(entity).IgnoreColumns(columns).ExecuteCommandAsync();
-        return resultCount == 1;
-    }
-    
-    
-    public async Task<bool> DeleteAsync(TEntity entity)
-    {
-        var resultCount = await dbClient.Deleteable(entity).ExecuteCommandAsync();
-        return resultCount == 1;
+        throw new NotImplementedException();
     }
 
-    public async Task<bool> DeleteAsync(Expression<Func<TEntity, bool>> expression)
+    public Task<int> InsertManyAsync(IEnumerable<TEntity> entities)
     {
-        var resultCount = await dbClient.Deleteable<TEntity>().Where(expression).ExecuteCommandAsync();
-        return resultCount > 0;
+        return sqlSugarClient.Insertable<TEntity>(entities).ExecuteCommandAsync();
     }
 
-    public async Task<bool> DeleteAsync<TPrimaryKey>(TPrimaryKey id)
+    public Task<int> UpdateAsync(TEntity entity)
     {
-        var resultCount = await dbClient.Deleteable<TEntity>().In(id).ExecuteCommandAsync();
-        return resultCount == 1;
-    }
-    
-    public async Task<bool> DeleteAsync<TPrimaryKey>(IEnumerable<TPrimaryKey> ids)
-    {
-        var resultCount = await dbClient.Deleteable<TEntity>().In(ids.ToArray()).ExecuteCommandAsync();
-        return resultCount == ids.Count();
+        return sqlSugarClient.Updateable(entity).ExecuteCommandAsync();
     }
 
-    public Task<int> ExecuteCommandAsync(string sql, object? parameters = null)
+    public Task<int> UpdateAsync(FormattableString sql)
     {
-        return dbClient.Ado.ExecuteCommandAsync(sql,parameters);
+        throw new NotImplementedException();
     }
 
-    public async Task DatabaseTransactionAsync(Func<ISqlSugarClient,Task> action)
+    public Task<int> DeleteAsync(TEntity entity)
     {
-        try
-        {
-            await dbClient.Ado.BeginTranAsync();
-            await action(dbClient);
-            await dbClient.Ado.CommitTranAsync();
-        }
-        catch (Exception e)
-        {
-            await dbClient.Ado.RollbackTranAsync();
-            throw;
-        }
+        return sqlSugarClient.Deleteable(entity).ExecuteCommandAsync();
     }
-    
+
+    public Task<int> DeleteAsync(FormattableString sql)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<int> DeleteAsync(Expression<Func<TEntity, bool>> expression)
+    {
+        return sqlSugarClient.Deleteable<TEntity>().Where(expression).ExecuteCommandAsync();
+    }
+
+    public Task<int> ExecuteCommandAsync(FormattableString sql)
+    {
+        throw new NotImplementedException();
+    }
 }

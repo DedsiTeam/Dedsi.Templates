@@ -9,7 +9,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\frameworks\MyCompanyName.MyProjectName.SqlSugar\MyCompanyName.MyProjectName.SqlSugar.csproj" />
-      <ProjectReference Include="..\MyCompanyName.MyProjectName.Core\MyCompanyName.MyProjectName.Core.csproj" />
+      <ProjectReference Include="..\MyCompanyName.MyProjectName.Domain\MyCompanyName.MyProjectName.Domain.csproj" />
     </ItemGroup>
 
 </Project>
