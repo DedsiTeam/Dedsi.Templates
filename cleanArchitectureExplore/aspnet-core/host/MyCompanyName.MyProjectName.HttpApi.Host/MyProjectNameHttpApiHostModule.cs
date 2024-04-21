@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
 using Microsoft.OpenApi.Models;
 using MyCompanyName.MyProjectName.Core;
@@ -92,6 +94,7 @@ public class MyProjectNameHttpApiHostModule : AbpModule
             });
         }
 
+        // swagger
         context.Services.AddSwaggerGen(options =>
         {
             options.SwaggerDoc(MyCompanyNameMyProjectNameCoreOptions.ModuleName, new OpenApiInfo {Title = MyCompanyNameMyProjectNameCoreOptions.ModuleName + " API", Version = "v1"});
@@ -116,15 +119,7 @@ public class MyProjectNameHttpApiHostModule : AbpModule
             options.Languages.Add(new LanguageInfo("zh-Hant", "zh-Hant", "繁體中文"));
             options.Languages.Add(new LanguageInfo("en", "en", "English"));
         });
-
-        context.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-                options.Authority = configuration["AuthServer:Authority"];
-                options.RequireHttpsMetadata = configuration.GetValue<bool>("AuthServer:RequireHttpsMetadata");
-                options.Audience = MyCompanyNameMyProjectNameCoreOptions.ModuleName;
-            });
-
+    
         Configure<AbpDistributedCacheOptions>(options =>
         {
             options.KeyPrefix = MyCompanyNameMyProjectNameCoreOptions.ModuleName + ":";
@@ -137,6 +132,22 @@ public class MyProjectNameHttpApiHostModule : AbpModule
             dataProtectionBuilder.PersistKeysToStackExchangeRedis(redis, MyCompanyNameMyProjectNameCoreOptions.ModuleName + "-Protection-Keys");
         }
 
+        context.Services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options => {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.FromHours(1),
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = configuration["JwtBearerOptions:Issuer"],
+                    ValidAudience = configuration["JwtBearerOptions:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtBearerOptions:SecurityKey"]!))
+                };
+            });
+        
         context.Services.AddCors(options =>
         {
             options.AddDefaultPolicy(builder =>

@@ -6,36 +6,60 @@ namespace MyCompanyName.MyProjectName.Repositories;
 
 public class ReadOnlyRepository<TEntity>(ISqlSugarClient sqlSugarClient) : IReadOnlyRepository<TEntity>
 {
-    protected ISugarQueryable<TEntity> GetQueryable() => sqlSugarClient.Queryable<TEntity>();
+    public Task<ISqlSugarClient> GetSqlSugarClientAsync() => Task.FromResult(sqlSugarClient);
+    public Task<ISugarQueryable<TEntity>> GetQueryableAsync() => Task.FromResult(sqlSugarClient.Queryable<TEntity>());
     
-    public Task<bool> AnyAsync(Expression<Func<TEntity, bool>> expression)
+    public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> expression)
     {
-        return GetQueryable().AnyAsync(expression);
+        return await (await GetQueryableAsync()).AnyAsync(expression);
     }
 
-    public Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> expression)
+    public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> expression)
     {
-        return GetQueryable().FirstAsync(expression);
+        return await (await GetQueryableAsync()).FirstAsync(expression);
     }
 
-    public Task<List<TEntity>> GetListAsync()
+    public async Task<List<TEntity>> GetListAsync()
     {
-        return GetQueryable().ToListAsync();
+        return await (await GetQueryableAsync()).ToListAsync();
     }
 
-    public Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> expression)
+    public async Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> expression)
     {
-        return GetQueryable().Where(expression).ToListAsync();
+        return await (await GetQueryableAsync()).Where(expression).ToListAsync();
     }
 
-    public Task<int> CountAsync()
+    public async Task<(int, List<TEntity>)> PagedListAsync(IPagedData pagedData)
     {
-        return GetQueryable().CountAsync();
+        RefAsync<int> totalNumber = 0;
+        var entities = await (await GetQueryableAsync()).ToPageListAsync(pagedData.PageIndex, pagedData.PageSize,totalNumber);
+        return (totalNumber, entities);
     }
 
-    public Task<int> CountAsync(Expression<Func<TEntity, bool>> expression)
+    public async Task<(int,List<TEntity>)> PagedListAsync(
+        int pageIndex, 
+        int pageSize, 
+        Expression<Func<TEntity, bool>> whereExpression, 
+        Expression<Func<TEntity, object>> orderExpression, 
+        OrderByType orderByType = OrderByType.Asc)
     {
-        return GetQueryable().CountAsync(expression);
+        RefAsync<int> totalNumber = 0;
+        var entities = await (await GetQueryableAsync())
+                                            .Where(whereExpression)
+                                            .OrderBy(orderExpression, orderByType)
+                                            .ToPageListAsync(pageIndex, pageSize,totalNumber);
+        
+        return (totalNumber, entities);
+    }
+
+    public async Task<int> CountAsync()
+    {
+        return await (await GetQueryableAsync()).CountAsync();
+    }
+
+    public async Task<int> CountAsync(Expression<Func<TEntity, bool>> expression)
+    {
+        return await (await GetQueryableAsync()).CountAsync(expression);
     }
 
 }

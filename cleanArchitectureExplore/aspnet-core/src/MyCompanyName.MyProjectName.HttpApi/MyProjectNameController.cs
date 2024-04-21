@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using MyCompanyName.MyProjectName.AspNetCore;
 using Volo.Abp;
+using Volo.Abp.AspNetCore.Mvc;
 
 namespace MyCompanyName.MyProjectName;
 
@@ -8,7 +8,7 @@ namespace MyCompanyName.MyProjectName;
 [Area(MyCompanyNameMyProjectNameCoreOptions.ModuleName)]
 [RemoteService(Name = MyCompanyNameMyProjectNameCoreOptions.RemoteServiceName)]
 [Route("api/MyProjectName/[controller]/[action]")]
-public abstract class MyProjectNameController : MyCompanyNameMyProjectNameControllerBase
+public abstract class MyProjectNameController : AbpControllerBase
 {
 
 }

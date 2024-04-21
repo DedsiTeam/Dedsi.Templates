@@ -1,3 +1,4 @@
+using MyCompanyName.MyProjectName.Core.AppServices;
 using MyCompanyName.MyProjectName.Core.Domains;
 
 namespace MyCompanyName.MyProjectName.AbpAuditLogs;
@@ -10,3 +11,6 @@ public class AbpAuditLogDto : EntityGuid
     
     public int HttpStatusCode { get; set; }
 }
+
+public class AbpAuditLogPagedInputDto : PagedInputDto;
+public class AbpAuditLogPagedResultDto : PagedResultDto<AbpAuditLogDto>;

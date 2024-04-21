@@ -11,4 +11,17 @@ public class AbpAuditLogAppService(IAbpAuditLogRepository auditLogRepository) : 
 
         return entity.Adapt<AbpAuditLogDto>();
     }
+
+    public async Task<AbpAuditLogPagedResultDto> PagedListAsync(AbpAuditLogPagedInputDto input)
+    {
+        var dbData = await auditLogRepository.PagedListAsync(input);
+        
+        var items = dbData.Item2.Adapt<List<AbpAuditLogDto>>();
+
+        return new AbpAuditLogPagedResultDto()
+        {
+            TotalCount = dbData.Item1,
+            Items = items
+        };
+    }
 }

@@ -8,8 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\frameworks\MyCompanyName.MyProjectName.AspNetCore\MyCompanyName.MyProjectName.AspNetCore.csproj" />
       <ProjectReference Include="..\MyCompanyName.MyProjectName.Domain\MyCompanyName.MyProjectName.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="8.1.1" />
     </ItemGroup>
 
 </Project>
