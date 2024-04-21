@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>MyCompanyName.MyProjectName</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\frameworks\MyCompanyName.MyProjectName.SqlSugar\MyCompanyName.MyProjectName.SqlSugar.csproj" />
+      <ProjectReference Include="..\MyCompanyName.MyProjectName.Core\MyCompanyName.MyProjectName.Core.csproj" />
+    </ItemGroup>
+
+</Project>
