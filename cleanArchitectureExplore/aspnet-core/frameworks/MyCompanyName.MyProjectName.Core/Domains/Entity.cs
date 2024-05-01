@@ -2,7 +2,7 @@ using SqlSugar;
 
 namespace MyCompanyName.MyProjectName.Core.Domains;
 
-public class Entity<TKey>
+public class Entity<TKey> : IEntity<TKey>
 {
     [SugarColumn(IsPrimaryKey = true)]
     public virtual TKey Id { get; set; }

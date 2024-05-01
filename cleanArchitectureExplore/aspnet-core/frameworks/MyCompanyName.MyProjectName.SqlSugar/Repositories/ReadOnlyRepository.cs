@@ -4,7 +4,7 @@ using SqlSugar;
 
 namespace MyCompanyName.MyProjectName.Repositories;
 
-public class ReadOnlyRepository<TEntity>(ISqlSugarClient sqlSugarClient) : IReadOnlyRepository<TEntity>
+public class ReadOnlyRepository<TEntity,TKey>(ISqlSugarClient sqlSugarClient) : IReadOnlyRepository<TEntity,TKey>
 {
     public Task<ISqlSugarClient> GetSqlSugarClientAsync() => Task.FromResult(sqlSugarClient);
     public Task<ISugarQueryable<TEntity>> GetQueryableAsync() => Task.FromResult(sqlSugarClient.Queryable<TEntity>());
@@ -17,6 +17,11 @@ public class ReadOnlyRepository<TEntity>(ISqlSugarClient sqlSugarClient) : IRead
     public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> expression)
     {
         return await (await GetQueryableAsync()).FirstAsync(expression);
+    }
+
+    public async Task<TEntity> GetAsync(TKey id)
+    {
+        return await (await GetQueryableAsync()).InSingleAsync(id);
     }
 
     public async Task<List<TEntity>> GetListAsync()

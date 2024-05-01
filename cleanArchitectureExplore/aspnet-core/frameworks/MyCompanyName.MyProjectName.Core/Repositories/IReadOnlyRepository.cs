@@ -4,7 +4,7 @@ using Volo.Abp.DependencyInjection;
 
 namespace MyCompanyName.MyProjectName.Core.Repositories;
 
-public interface IReadOnlyRepository<TEntity> : ITransientDependency
+public interface IReadOnlyRepository<TEntity,TKey> : ITransientDependency
 {
     Task<ISqlSugarClient> GetSqlSugarClientAsync();
     Task<ISugarQueryable<TEntity>> GetQueryableAsync();
@@ -12,6 +12,7 @@ public interface IReadOnlyRepository<TEntity> : ITransientDependency
     Task<bool> AnyAsync(Expression<Func<TEntity, bool>> expression);
     
     Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> expression);
+    Task<TEntity> GetAsync(TKey id);
     
     Task<List<TEntity>> GetListAsync();
     

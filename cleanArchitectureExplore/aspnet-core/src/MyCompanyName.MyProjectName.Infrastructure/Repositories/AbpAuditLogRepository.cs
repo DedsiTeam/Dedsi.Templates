@@ -4,7 +4,7 @@ using SqlSugar;
 namespace MyCompanyName.MyProjectName.Repositories;
 
 public class AbpAuditLogRepository(ISqlSugarClient sqlSugarClient) 
-    : ReadOnlyRepository<AbpAuditLog>(sqlSugarClient), 
+    : ReadOnlyRepository<AbpAuditLog,Guid>(sqlSugarClient), 
         IAbpAuditLogRepository
 {
     

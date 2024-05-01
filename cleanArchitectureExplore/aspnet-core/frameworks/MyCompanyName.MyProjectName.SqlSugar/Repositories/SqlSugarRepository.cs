@@ -4,9 +4,9 @@ using SqlSugar;
 
 namespace MyCompanyName.MyProjectName.Repositories;
 
-public class SqlSugarRepository<TEntity>(ISqlSugarClient sqlSugarClient) 
-    : ReadOnlyRepository<TEntity>(sqlSugarClient), 
-        IRepository<TEntity>  
+public class SqlSugarRepository<TEntity,TKey>(ISqlSugarClient sqlSugarClient) 
+    : ReadOnlyRepository<TEntity,TKey>(sqlSugarClient), 
+        IRepository<TEntity,TKey>  
     where TEntity : class, new()
 {
     public Task<int> InsertAsync(TEntity entity)
